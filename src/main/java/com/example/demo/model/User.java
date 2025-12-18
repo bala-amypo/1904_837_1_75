@@ -1,6 +1,13 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -9,9 +16,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String email;
+
     private String password;
-    private String role;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> role;
 
     public User() {
     }
@@ -36,15 +47,16 @@ public class User {
         return password;
     }
 
+    // Password will be encrypted in Service layer (BCrypt)
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
+    public Set<String> getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Set<String> role) {
         this.role = role;
     }
 }
