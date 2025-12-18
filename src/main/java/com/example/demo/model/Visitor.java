@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import java.time.LocalDateTime;
 
 @Entity
 public class Visitor {
@@ -16,7 +17,9 @@ public class Visitor {
     private String email;
     private String phone;
     private String idProof;
+    private LocalDateTime createdAt;
 
+    // Non-parameterized constructor
     public Visitor() {
     }
 
@@ -58,5 +61,13 @@ public class Visitor {
 
     public void setIdProof(String idProof) {
         this.idProof = idProof;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
