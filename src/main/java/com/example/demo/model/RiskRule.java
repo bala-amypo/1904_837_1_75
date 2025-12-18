@@ -13,6 +13,7 @@ public class RiskRule {
     private String ruleType;
     private int threshold;
     private int scoreImpact;
+    private LocalDateTime createdAt;
 
     public RiskRule() {
     }
@@ -55,5 +56,13 @@ public class RiskRule {
 
     public void setScoreImpact(int scoreImpact) {
         this.scoreImpact = scoreImpact;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

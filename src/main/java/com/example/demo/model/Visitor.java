@@ -19,7 +19,6 @@ public class Visitor {
     private String idProof;
     private LocalDateTime createdAt;
 
-    // Non-parameterized constructor
     public Visitor() {
     }
 

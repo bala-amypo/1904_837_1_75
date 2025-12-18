@@ -1,6 +1,10 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import java.time.LocalDateTime;
 
 @Entity
 public class VisitLog {
@@ -10,8 +14,8 @@ public class VisitLog {
     private Long id;
 
     private Long visitorId;
-    private String entryTime;
-    private String exitTime;
+    private LocalDateTime entryTime;
+    private LocalDateTime exitTime;
     private String purpose;
     private String location;
 
@@ -34,19 +38,19 @@ public class VisitLog {
         this.visitorId = visitorId;
     }
 
-    public String getEntryTime() {
+    public LocalDateTime getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(String entryTime) {
+    public void setEntryTime(LocalDateTime entryTime) {
         this.entryTime = entryTime;
     }
 
-    public String getExitTime() {
+    public LocalDateTime getExitTime() {
         return exitTime;
     }
 
-    public void setExitTime(String exitTime) {
+    public void setExitTime(LocalDateTime exitTime) {
         this.exitTime = exitTime;
     }
 
