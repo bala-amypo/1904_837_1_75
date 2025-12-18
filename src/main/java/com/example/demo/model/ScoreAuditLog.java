@@ -1,20 +1,34 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.PrePersist;
+import java.time.LocalDateTime;
 
 @Entity
-public class ScoreAuditLog {
+public class RiskRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long visitorId;
-    private Long ruleId;
-    private int scoreChange;
-    private String reason;
+    @Column(unique = true)
+    private String ruleName;
 
-    public ScoreAuditLog() {
+    private String ruleType;
+    private Integer threshold;
+    private Integer scoreImpact;
+    private LocalDateTime createdAt;
+
+    public RiskRule() {
+    }
+
+    @PrePersist
+    public void setCreatedAt() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -25,35 +39,39 @@ public class ScoreAuditLog {
         this.id = id;
     }
 
-    public Long getVisitorId() {
-        return visitorId;
+    public String getRuleName() {
+        return ruleName;
     }
 
-    public void setVisitorId(Long visitorId) {
-        this.visitorId = visitorId;
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 
-    public Long getRuleId() {
-        return ruleId;
+    public String getRuleType() {
+        return ruleType;
     }
 
-    public void setRuleId(Long ruleId) {
-        this.ruleId = ruleId;
+    public void setRuleType(String ruleType) {
+        this.ruleType = ruleType;
     }
 
-    public int getScoreChange() {
-        return scoreChange;
+    public Integer getThreshold() {
+        return threshold;
     }
 
-    public void setScoreChange(int scoreChange) {
-        this.scoreChange = scoreChange;
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
     }
 
-    public String getReason() {
-        return reason;
+    public Integer getScoreImpact() {
+        return scoreImpact;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setScoreImpact(Integer scoreImpact) {
+        this.scoreImpact = scoreImpact;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
