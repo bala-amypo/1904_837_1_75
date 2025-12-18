@@ -15,7 +15,6 @@ public class RiskScore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // One-to-One mapping with Visitor
     @OneToOne
     @JoinColumn(name = "visitor_id")
     private Visitor visitor;
@@ -24,7 +23,6 @@ public class RiskScore {
     private String riskLevel;
     private LocalDateTime evaluatedAt;
 
-    // Non-parameterized constructor
     public RiskScore() {
     }
 

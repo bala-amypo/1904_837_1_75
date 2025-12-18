@@ -1,8 +1,11 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.PrePersist;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,13 +15,22 @@ public class RiskRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String ruleName;
+
     private String ruleType;
-    private int threshold;
-    private int scoreImpact;
+
+    private Integer threshold;
+    private Integer scoreImpact;
+
     private LocalDateTime createdAt;
 
     public RiskRule() {
+    }
+
+    @PrePersist
+    public void setCreatedAt() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -45,27 +57,23 @@ public class RiskRule {
         this.ruleType = ruleType;
     }
 
-    public int getThreshold() {
+    public Integer getThreshold() {
         return threshold;
     }
 
-    public void setThreshold(int threshold) {
+    public void setThreshold(Integer threshold) {
         this.threshold = threshold;
     }
 
-    public int getScoreImpact() {
+    public Integer getScoreImpact() {
         return scoreImpact;
     }
 
-    public void setScoreImpact(int scoreImpact) {
+    public void setScoreImpact(Integer scoreImpact) {
         this.scoreImpact = scoreImpact;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
