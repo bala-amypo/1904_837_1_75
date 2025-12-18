@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +15,10 @@ public class VisitLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long visitorId;
+    @ManyToOne
+    @JoinColumn(name = "visitor_id")
+    private Visitor visitor;
+
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private String purpose;
@@ -30,12 +35,12 @@ public class VisitLog {
         this.id = id;
     }
 
-    public Long getVisitorId() {
-        return visitorId;
+    public Visitor getVisitor() {
+        return visitor;
     }
 
-    public void setVisitorId(Long visitorId) {
-        this.visitorId = visitorId;
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
     }
 
     public LocalDateTime getEntryTime() {
