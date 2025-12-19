@@ -24,21 +24,21 @@ public class VisitLogServiceImpl implements VisitLogService {
         Visitor visitor = visitorRepository.findById(visitorId)
                 .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
-        VisitLog visitLog = VisitLog.builder()
+        VisitLog log = VisitLog.builder()
                 .visitor(visitor)
                 .purpose(purpose)
                 .location(location)
                 .entryTime(LocalDateTime.now())
                 .build();
 
-        return visitLogRepository.save(visitLog);
+        return visitLogRepository.save(log);
     }
 
     @Override
-    public VisitLog updateExitTime(Long visitLogId) {
+    public VisitLog updateExitTime(Long logId) {
 
-        VisitLog log = visitLogRepository.findById(visitLogId)
-                .orElseThrow(() -> new RuntimeException("Visit Log not found"));
+        VisitLog log = visitLogRepository.findById(logId)
+                .orElseThrow(() -> new RuntimeException("Visit log not found"));
 
         log.setExitTime(LocalDateTime.now());
         return visitLogRepository.save(log);
