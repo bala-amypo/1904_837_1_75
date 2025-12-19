@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,6 +16,7 @@ public class VisitLog {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "visitor_id")
     private Visitor visitor;
 
     private LocalDateTime entryTime;
@@ -27,10 +26,8 @@ public class VisitLog {
     private String location;
 
     @PrePersist
-    void onEntry() {
-        entryTime = LocalDateTime.now();
-    }
-    void onExit() {
-        exitTime = LocalDateTime.now();
+    void prePersist() {
+        if (entryTime == null)
+            entryTime = LocalDateTime.now();
     }
 }

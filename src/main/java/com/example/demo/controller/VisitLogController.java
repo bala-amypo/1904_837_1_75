@@ -5,6 +5,7 @@ import com.example.demo.service.VisitLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -12,24 +13,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VisitLogController {
 
-private final VisitLogService visitLogService;
+    private final VisitLogService visitLogService;
 
-@PostMapping("/{visitorId}")
-public VisitLog createVisitLog(
-        @PathVariable Long visitorId,
-        @RequestBody VisitLog log) {
-    return visitLogService.createVisitLog(visitorId, log);
-}
+    @PostMapping("/{visitorId}")
+    public VisitLog createVisit(@PathVariable Long visitorId,
+                                @RequestBody VisitLog log) {
 
-@GetMapping("/{logId}")
-public VisitLog getVisitLog(@PathVariable Long logId) {
-    return visitLogService.getLog(logId);
-}
+        return visitLogService.createVisitLog(visitorId, log);
+    }
 
-@GetMapping("/visitor/{visitorId}")
-public List<VisitLog> getLogsByVisitor(@PathVariable Long visitorId) {
-    return visitLogService.getLogsByVisitor(visitorId);
-}
+    @PutMapping("/exit/{logId}")
+    public VisitLog exit(@PathVariable Long logId) {
+        return visitLogService.updateExitTime(logId);
+    }
 
+    @GetMapping("/{logId}")
+    public VisitLog getLog(@PathVariable Long logId) {
+        return visitLogService.getLog(logId);
+    }
 
+    @GetMapping("/visitor/{visitorId}")
+    public List<VisitLog> getAllVisits(@PathVariable Long visitorId) {
+        return visitLogService.getLogsByVisitor(visitorId);
+    }
+
+    @GetMapping("/visitor/{visitorId}/since")
+    public List<VisitLog> getVisitsSince(@PathVariable Long visitorId,
+                                         @RequestParam Integer hours) {
+        return visitLogService.getLogsByVisitorSince(
+                visitorId,
+                LocalDateTime.now().minusHours(hours)
+        );
+    }
+
+    @GetMapping
+    public List<VisitLog> getAllLogs() {
+        return visitLogService.getAllLogs();
+    }
 }

@@ -7,6 +7,7 @@ import com.example.demo.repository.VisitorRepository;
 import com.example.demo.service.VisitLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,35 +16,53 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VisitLogServiceImpl implements VisitLogService {
 
-private final VisitLogRepository visitLogRepository;
-private final VisitorRepository visitorRepository;
+    private final VisitLogRepository visitLogRepository;
+    private final VisitorRepository visitorRepository;
 
-@Override
-public VisitLog createVisitLog(Long visitorId, VisitLog log) {
+    @Override
+    public VisitLog createVisitLog(Long visitorId, VisitLog log) {
 
-    Visitor visitor = visitorRepository.findById(visitorId)
-            .orElseThrow(() -> new RuntimeException("Visitor not found"));
+        Visitor visitor = visitorRepository.findById(visitorId)
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
-    VisitLog newLog = VisitLog.builder()
-            .visitor(visitor)
-            .purpose(log.getPurpose())
-            .location(log.getLocation())
-            .entryTime(LocalDateTime.now())
-            .build();
+        log.setVisitor(visitor);
 
-    return visitLogRepository.save(newLog);
-}
+        if (log.getEntryTime() == null)
+            log.setEntryTime(LocalDateTime.now());
 
-@Override
-public VisitLog getLog(Long id) {
-    return visitLogRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Visit log not found"));
-}
+        return visitLogRepository.save(log);
+    }
 
-@Override
-public List<VisitLog> getLogsByVisitor(Long visitorId) {
-    return visitLogRepository.findByVisitor_Id(visitorId);
-}
+    @Override
+    @Transactional
+    public VisitLog updateExitTime(Long logId) {
 
+        VisitLog log = visitLogRepository.findById(logId)
+                .orElseThrow(() -> new RuntimeException("Visit log not found"));
 
+        log.setExitTime(LocalDateTime.now());
+
+        return log;
+    }
+
+    @Override
+    public VisitLog getLog(Long logId) {
+        return visitLogRepository.findById(logId)
+                .orElseThrow(() -> new RuntimeException("Visit log not found"));
+    }
+
+    @Override
+    public List<VisitLog> getLogsByVisitor(Long visitorId) {
+        return visitLogRepository.findByVisitorId(visitorId);
+    }
+
+    @Override
+    public List<VisitLog> getLogsByVisitorSince(Long visitorId, LocalDateTime since) {
+        return visitLogRepository.findByVisitorIdAndEntryTimeAfter(visitorId, since);
+    }
+
+    @Override
+    public List<VisitLog> getAllLogs() {
+        return visitLogRepository.findAll();
+    }
 }
