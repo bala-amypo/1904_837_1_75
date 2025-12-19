@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface VisitLogService {
 
-    VisitLog saveVisitLog(Long visitorId, String purpose, String location);
+    VisitLog createVisitLog(Long visitorId, VisitLog log);
 
-    VisitLog updateExitTime(Long logId);
+    VisitLog updateExit(Long logId);
 
-    List<VisitLog> getVisitLogsForVisitor(Long visitorId, LocalDateTime since);
+    VisitLog getLog(Long id);
 
-    List<VisitLog> getAllLogs();
+    List<VisitLog> getLogsByVisitor(Long visitorId);
+
+    List<VisitLog> getLogsSince(Long visitorId, LocalDateTime since);
 }

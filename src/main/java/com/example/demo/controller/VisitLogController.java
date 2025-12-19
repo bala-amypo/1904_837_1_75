@@ -15,41 +15,32 @@ public class VisitLogController {
 
     private final VisitLogService visitLogService;
 
-    // Create new visit log
     @PostMapping("/{visitorId}")
-    public VisitLog createVisit(
-            @PathVariable Long visitorId,
-            @RequestBody VisitLog log
-    ) {
-        return visitLogService.saveVisitLog(
-                visitorId,
-                log.getPurpose(),
-                log.getLocation()
-        );
+    public VisitLog create(@PathVariable Long visitorId, @RequestBody VisitLog log) {
+        return visitLogService.createVisitLog(visitorId, log);
     }
 
-    // Update exit time
     @PutMapping("/exit/{logId}")
     public VisitLog updateExit(@PathVariable Long logId) {
-        return visitLogService.updateExitTime(logId);
+        return visitLogService.updateExit(logId);
     }
 
-    // Get logs for visitor since last X hours (optional)
-    @GetMapping("/{visitorId}")
-    public List<VisitLog> getLogsForVisitor(
+    @GetMapping("/{logId}")
+    public VisitLog getOne(@PathVariable Long logId) {
+        return visitLogService.getLog(logId);
+    }
+
+    @GetMapping("/visitor/{visitorId}")
+    public List<VisitLog> getByVisitor(@PathVariable Long visitorId) {
+        return visitLogService.getLogsByVisitor(visitorId);
+    }
+
+    @GetMapping("/visitor/{visitorId}/since")
+    public List<VisitLog> getSince(
             @PathVariable Long visitorId,
-            @RequestParam(required = false) Integer hours
+            @RequestParam("hours") int hours
     ) {
-        LocalDateTime since = (hours != null)
-                ? LocalDateTime.now().minusHours(hours)
-                : LocalDateTime.now().minusYears(10);
-
-        return visitLogService.getVisitLogsForVisitor(visitorId, since);
-    }
-
-    // Get all logs
-    @GetMapping
-    public List<VisitLog> getAllLogs() {
-        return visitLogService.getAllLogs();
+        LocalDateTime since = LocalDateTime.now().minusHours(hours);
+        return visitLogService.getLogsSince(visitorId, since);
     }
 }
