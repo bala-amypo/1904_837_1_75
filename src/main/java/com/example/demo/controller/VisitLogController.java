@@ -41,3 +41,15 @@ public class VisitLogController {
             @RequestParam(required = false) Integer hours
     ) {
         LocalDateTime since = (hours != null)
+                ? LocalDateTime.now().minusHours(hours)
+                : LocalDateTime.now().minusYears(10);
+
+        return visitLogService.getVisitLogsForVisitor(visitorId, since);
+    }
+
+    // Get all logs
+    @GetMapping
+    public List<VisitLog> getAllLogs() {
+        return visitLogService.getAllLogs();
+    }
+}
