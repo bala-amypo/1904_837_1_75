@@ -15,46 +15,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VisitLogServiceImpl implements VisitLogService {
 
-    private final VisitLogRepository visitLogRepository;
-    private final VisitorRepository visitorRepository;
+private final VisitLogRepository visitLogRepository;
+private final VisitorRepository visitorRepository;
 
-    @Override
-    public VisitLog createVisitLog(Long visitorId, VisitLog log) {
-        Visitor visitor = visitorRepository.findById(visitorId)
-                .orElseThrow(() -> new RuntimeException("Visitor not found"));
+@Override
+public VisitLog createVisitLog(Long visitorId, VisitLog log) {
 
-        VisitLog newLog = VisitLog.builder()
-                .visitor(visitor)
-                .purpose(log.getPurpose())
-                .location(log.getLocation())
-                .entryTime(LocalDateTime.now())
-                .build();
+    Visitor visitor = visitorRepository.findById(visitorId)
+            .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
-        return visitLogRepository.save(newLog);
-    }
+    VisitLog newLog = VisitLog.builder()
+            .visitor(visitor)
+            .purpose(log.getPurpose())
+            .location(log.getLocation())
+            .entryTime(LocalDateTime.now())
+            .build();
 
-    @Override
-    public VisitLog updateExit(Long logId) {
-        VisitLog log = visitLogRepository.findById(logId)
-                .orElseThrow(() -> new RuntimeException("Visit log not found"));
+    return visitLogRepository.save(newLog);
+}
 
-        log.setExitTime(LocalDateTime.now());
-        return visitLogRepository.save(log);
-    }
+@Override
+public VisitLog getLog(Long id) {
+    return visitLogRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Visit log not found"));
+}
 
-    @Override
-    public VisitLog getLog(Long id) {
-        return visitLogRepository.findById(id)
-                .orElse(null);
-    }
+@Override
+public List<VisitLog> getLogsByVisitor(Long visitorId) {
+    return visitLogRepository.findByVisitor_Id(visitorId);
+}
 
-    @Override
-    public List<VisitLog> getLogsByVisitor(Long visitorId) {
-        return visitLogRepository.findByVisitorSince(visitorId, LocalDateTime.MIN);
-    }
 
-    @Override
-    public List<VisitLog> getLogsSince(Long visitorId, LocalDateTime since) {
-        return visitLogRepository.findByVisitorSince(visitorId, since);
-    }
 }
