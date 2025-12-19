@@ -30,4 +30,7 @@ public class VisitLog {
     void onEntry() {
         entryTime = LocalDateTime.now();
     }
+    void onExit() {
+        exitTime = LocalDateTime.now();
+    }
 }
