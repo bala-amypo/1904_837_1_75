@@ -1,14 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RiskRule {
 
     @Id
@@ -19,10 +21,11 @@ public class RiskRule {
     private String ruleType;
     private Integer threshold;
     private Integer scoreImpact;
+
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+    void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }
