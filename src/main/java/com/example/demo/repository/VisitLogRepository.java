@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
 
-    List<VisitLog> findByVisitorSince(Long visitorId, LocalDateTime since);
+    List<VisitLog> findByVisitorId(Long visitorId);
 
-    long countVisitsInWindow(Long visitorId, LocalDateTime start, LocalDateTime end);
+    List<VisitLog> findByVisitorIdAndEntryTimeAfter(Long visitorId, LocalDateTime since);
 }

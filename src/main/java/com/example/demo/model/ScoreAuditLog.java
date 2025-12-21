@@ -1,14 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ScoreAuditLog {
 
     @Id
@@ -23,10 +25,11 @@ public class ScoreAuditLog {
 
     private Integer scoreChange;
     private String reason;
+
     private LocalDateTime loggedAt;
 
     @PrePersist
-    public void prePersist() {
-        this.loggedAt = LocalDateTime.now();
+    void onLog() {
+        loggedAt = LocalDateTime.now();
     }
 }
