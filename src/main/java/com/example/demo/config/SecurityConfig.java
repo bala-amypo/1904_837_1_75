@@ -1,43 +1,51 @@
 package com.example.demo.config;
 
-import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.CustomUserDetailsService;
-import org.springframework.context.annotation.*;
-import org.springframework.security.authentication.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.*;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final JwtAuthenticationFilter jwtFilter;
-
-    public SecurityConfig(JwtAuthenticationFilter filter) {
-        this.jwtFilter = filter;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http
+        http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
+                        // Allow Swagger UI
                         .requestMatchers(
-                                "/auth/**",
+                                "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
                         ).permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+
+                        // Allow authentication endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // Allow public test-defined endpoints
+                        .requestMatchers("/api/visit-logs/**").permitAll()
+                        .requestMatchers("/api/visitors/**").permitAll()
+                        .requestMatchers("/api/rules/**").permitAll()
+                        .requestMatchers("/api/score/**").permitAll()
+
+                        // Any other request requires authentication
+                        .anyRequest().authenticated()
+                );
+
+        return http.build();
     }
 
     @Bean
@@ -46,7 +54,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
         return config.getAuthenticationManager();
     }
 }
