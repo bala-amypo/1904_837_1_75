@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class VisitLog {
 
     @Id
@@ -16,18 +16,15 @@ public class VisitLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "visitor_id")
     private Visitor visitor;
 
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
-
     private String purpose;
     private String location;
 
     @PrePersist
-    void prePersist() {
-        if (entryTime == null)
-            entryTime = LocalDateTime.now();
+    public void prePersist() {
+        this.entryTime = LocalDateTime.now();
     }
 }
