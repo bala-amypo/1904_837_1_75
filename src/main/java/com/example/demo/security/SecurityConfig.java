@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
-                        // Allow Swagger UI
                         .requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
@@ -32,16 +31,13 @@ public class SecurityConfig {
                                 "/v3/api-docs.yaml"
                         ).permitAll()
 
-                        // Allow authentication endpoints
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Allow public test-defined endpoints
                         .requestMatchers("/api/visit-logs/**").permitAll()
                         .requestMatchers("/api/visitors/**").permitAll()
                         .requestMatchers("/api/rules/**").permitAll()
                         .requestMatchers("/api/score/**").permitAll()
 
-                        // Any other request requires authentication
                         .anyRequest().authenticated()
                 );
 
