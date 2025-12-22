@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.interface;
 
 import com.example.demo.model.RiskRule;
 import java.util.List;
