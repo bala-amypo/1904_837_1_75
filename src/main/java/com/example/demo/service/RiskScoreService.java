@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.;
 
 import com.example.demo.model.RiskScore;
 import java.util.List;
