@@ -2,13 +2,15 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class VisitLog {
 
     @Id
@@ -16,7 +18,6 @@ public class VisitLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "visitor_id")
     private Visitor visitor;
 
     private LocalDateTime entryTime;
@@ -25,9 +26,11 @@ public class VisitLog {
     private String purpose;
     private String location;
 
+    // 🔴 MUST BE PUBLIC – tests call this directly
     @PrePersist
-    void prePersist() {
-        if (entryTime == null)
+    public void prePersist() {
+        if (entryTime == null) {
             entryTime = LocalDateTime.now();
+        }
     }
 }
