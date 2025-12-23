@@ -1,11 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.RiskRule;
 import com.example.demo.model.ScoreAuditLog;
 import com.example.demo.model.Visitor;
-import com.example.demo.repository.RiskRuleRepository;
 import com.example.demo.repository.ScoreAuditLogRepository;
 import com.example.demo.repository.VisitorRepository;
 import com.example.demo.service.ScoreAuditLogService;
@@ -16,45 +12,41 @@ import java.util.List;
 @Service
 public class ScoreAuditLogServiceImpl implements ScoreAuditLogService {
 
-    private final ScoreAuditLogRepository logRepository;
+    private final ScoreAuditLogRepository repository;
     private final VisitorRepository visitorRepository;
-    private final RiskRuleRepository riskRuleRepository;
 
-    public ScoreAuditLogServiceImpl(ScoreAuditLogRepository logRepository,
-                                    VisitorRepository visitorRepository,
-                                    RiskRuleRepository riskRuleRepository) {
-        this.logRepository = logRepository;
+    public ScoreAuditLogServiceImpl(ScoreAuditLogRepository repository,
+                                    VisitorRepository visitorRepository) {
+        this.repository = repository;
         this.visitorRepository = visitorRepository;
-        this.riskRuleRepository = riskRuleRepository;
     }
 
     @Override
     public ScoreAuditLog logScoreChange(Long visitorId, Long ruleId, ScoreAuditLog log) {
 
         if (log.getReason() == null || log.getReason().isBlank()) {
-            throw new BadRequestException("reason required");
+            throw new IllegalArgumentException("reason required");
+        }
+
+        if (log.getScoreChange() != null && log.getScoreChange() < 0) {
+            throw new IllegalArgumentException("scoreChange must be non-negative");
         }
 
         Visitor visitor = visitorRepository.findById(visitorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
-
-        RiskRule rule = riskRuleRepository.findById(ruleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+                .orElseThrow(() -> new RuntimeException("not found"));
 
         log.setVisitor(visitor);
-        log.setAppliedRule(rule);
-
-        return logRepository.save(log);
+        return repository.save(log);
     }
 
     @Override
     public ScoreAuditLog getLog(Long id) {
-        return logRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Score log not found"));
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("not found"));
     }
 
     @Override
     public List<ScoreAuditLog> getLogsByVisitor(Long visitorId) {
-        return logRepository.findByVisitorId(visitorId);
+        return repository.findByVisitorId(visitorId);
     }
 }

@@ -13,24 +13,24 @@ import java.util.List;
 @Tag(name = "Visitors")
 public class VisitorController {
 
-    private final VisitorService visitorService;
+    private final VisitorService service;
 
-    public VisitorController(VisitorService visitorService) {
-        this.visitorService = visitorService;
+    public VisitorController(VisitorService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<Visitor> create(@RequestBody Visitor visitor) {
-        return ResponseEntity.status(201).body(visitorService.createVisitor(visitor));
+        return ResponseEntity.ok(service.createVisitor(visitor));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Visitor> get(@PathVariable Long id) {
-        return ResponseEntity.ok(visitorService.getVisitor(id));
+        return ResponseEntity.ok(service.getVisitor(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Visitor>> getAll() {
-        return ResponseEntity.ok(visitorService.getAllVisitors());
+    public ResponseEntity<List<Visitor>> all() {
+        return ResponseEntity.ok(service.getAllVisitors());
     }
 }

@@ -13,24 +13,24 @@ import java.util.List;
 @Tag(name = "Risk Rules")
 public class RiskRuleController {
 
-    private final RiskRuleService riskRuleService;
+    private final RiskRuleService service;
 
-    public RiskRuleController(RiskRuleService riskRuleService) {
-        this.riskRuleService = riskRuleService;
+    public RiskRuleController(RiskRuleService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<RiskRule> create(@RequestBody RiskRule rule) {
-        return ResponseEntity.status(201).body(riskRuleService.createRule(rule));
+        return ResponseEntity.ok(service.createRule(rule));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RiskRule> get(@PathVariable Long id) {
-        return ResponseEntity.ok(riskRuleService.getRule(id));
+        return ResponseEntity.ok(service.getRule(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<RiskRule>> getAll() {
-        return ResponseEntity.ok(riskRuleService.getAllRules());
+    public ResponseEntity<List<RiskRule>> all() {
+        return ResponseEntity.ok(service.getAllRules());
     }
 }

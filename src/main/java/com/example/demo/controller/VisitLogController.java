@@ -2,52 +2,37 @@ package com.example.demo.controller;
 
 import com.example.demo.model.VisitLog;
 import com.example.demo.service.VisitLogService;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/visit-log")
-@RequiredArgsConstructor
+@RequestMapping("/api/visit-logs")
+@Tag(name = "Visit Logs")
 public class VisitLogController {
 
-    private final VisitLogService visitLogService;
+    private final VisitLogService service;
+
+    public VisitLogController(VisitLogService service) {
+        this.service = service;
+    }
 
     @PostMapping("/{visitorId}")
-    public VisitLog createVisit(@PathVariable Long visitorId,
-                                @RequestBody VisitLog log) {
-
-        return visitLogService.createVisitLog(visitorId, log);
+    public ResponseEntity<VisitLog> create(
+            @PathVariable Long visitorId,
+            @RequestBody VisitLog log) {
+        return ResponseEntity.ok(service.createVisitLog(visitorId, log));
     }
 
-    @PutMapping("/exit/{logId}")
-    public VisitLog exit(@PathVariable Long logId) {
-        return visitLogService.updateExitTime(logId);
-    }
-
-    @GetMapping("/{logId}")
-    public VisitLog getLog(@PathVariable Long logId) {
-        return visitLogService.getLog(logId);
+    @GetMapping("/{id}")
+    public ResponseEntity<VisitLog> get(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getLog(id));
     }
 
     @GetMapping("/visitor/{visitorId}")
-    public List<VisitLog> getAllVisits(@PathVariable Long visitorId) {
-        return visitLogService.getLogsByVisitor(visitorId);
-    }
-
-    @GetMapping("/visitor/{visitorId}/since")
-    public List<VisitLog> getVisitsSince(@PathVariable Long visitorId,
-                                         @RequestParam Integer hours) {
-        return visitLogService.getLogsByVisitorSince(
-                visitorId,
-                LocalDateTime.now().minusHours(hours)
-        );
-    }
-
-    @GetMapping
-    public List<VisitLog> getAllLogs() {
-        return visitLogService.getAllLogs();
+    public ResponseEntity<List<VisitLog>> listByVisitor(@PathVariable Long visitorId) {
+        return ResponseEntity.ok(service.getLogsByVisitor(visitorId));
     }
 }

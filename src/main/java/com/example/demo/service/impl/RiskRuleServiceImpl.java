@@ -1,7 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.RiskRule;
 import com.example.demo.repository.RiskRuleRepository;
 import com.example.demo.service.RiskRuleService;
@@ -12,35 +10,34 @@ import java.util.List;
 @Service
 public class RiskRuleServiceImpl implements RiskRuleService {
 
-    private final RiskRuleRepository riskRuleRepository;
+    private final RiskRuleRepository repository;
 
-    public RiskRuleServiceImpl(RiskRuleRepository riskRuleRepository) {
-        this.riskRuleRepository = riskRuleRepository;
+    public RiskRuleServiceImpl(RiskRuleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public RiskRule createRule(RiskRule rule) {
 
-        riskRuleRepository.findByRuleName(rule.getRuleName())
-                .ifPresent(r -> {
-                    throw new BadRequestException("Rule name must be unique");
-                });
-
-        if (rule.getThreshold() < 0 || rule.getScoreImpact() < 0) {
-            throw new BadRequestException("threshold and scoreImpact must be non-negative");
+        if (rule.getThreshold() != null && rule.getThreshold() < 0) {
+            throw new IllegalArgumentException("threshold must be non-negative");
         }
 
-        return riskRuleRepository.save(rule);
+        if (rule.getScoreImpact() != null && rule.getScoreImpact() < 0) {
+            throw new IllegalArgumentException("scoreImpact must be non-negative");
+        }
+
+        return repository.save(rule);
     }
 
     @Override
     public RiskRule getRule(Long id) {
-        return riskRuleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("not found"));
     }
 
     @Override
     public List<RiskRule> getAllRules() {
-        return riskRuleRepository.findAll();
+        return repository.findAll();
     }
 }
