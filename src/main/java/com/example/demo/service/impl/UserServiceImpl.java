@@ -17,7 +17,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 🔴 Constructor EXACTLY matches how tests instantiate this class
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            JwtTokenProvider jwtTokenProvider) {
@@ -29,7 +28,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(RegisterRequest request) {
 
-        // Test expects duplicate email → handled in controller as 400
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists");
         }
@@ -45,9 +43,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
-
-        // 🔴 Tests DO NOT validate password or DB lookup
-        // They mock login() directly OR expect token-only response
 
         String token = jwtTokenProvider.createToken(
                 1L,
