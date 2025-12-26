@@ -25,12 +25,10 @@ public class VisitLogController {
             @RequestBody VisitLog log) {
         return ResponseEntity.ok(service.createVisitLog(visitorId, log));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<VisitLog> get(@PathVariable Long id) {
         return ResponseEntity.ok(service.getLog(id));
     }
-
     @GetMapping("/visitor/{visitorId}")
     public ResponseEntity<List<VisitLog>> listByVisitor(@PathVariable Long visitorId) {
         return ResponseEntity.ok(service.getLogsByVisitor(visitorId));

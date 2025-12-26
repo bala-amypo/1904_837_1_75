@@ -18,7 +18,6 @@ public class ScoreAuditLogController {
     public ScoreAuditLogController(ScoreAuditLogService service) {
         this.service = service;
     }
-
     @PostMapping("/{visitorId}/{ruleId}")
     public ResponseEntity<ScoreAuditLog> create(
             @PathVariable Long visitorId,
@@ -26,12 +25,10 @@ public class ScoreAuditLogController {
             @RequestBody ScoreAuditLog log) {
         return ResponseEntity.ok(service.logScoreChange(visitorId, ruleId, log));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<ScoreAuditLog> get(@PathVariable Long id) {
         return ResponseEntity.ok(service.getLog(id));
     }
-
     @GetMapping("/visitor/{visitorId}")
     public ResponseEntity<List<ScoreAuditLog>> logsByVisitor(@PathVariable Long visitorId) {
         return ResponseEntity.ok(service.getLogsByVisitor(visitorId));

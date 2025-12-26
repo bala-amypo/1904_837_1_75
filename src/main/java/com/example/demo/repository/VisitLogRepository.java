@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
 
-    // 🔴 FIXED: Explicit JPQL prevents method-name parsing error
     @Query("""
            SELECT v
            FROM VisitLog v
@@ -22,7 +21,6 @@ public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
             @Param("since") LocalDateTime since
     );
 
-    // 🔴 FIXED: Explicit JPQL
     @Query("""
            SELECT COUNT(v)
            FROM VisitLog v

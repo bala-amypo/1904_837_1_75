@@ -22,7 +22,6 @@ public class RiskScore {
 
     private Integer totalScore;
     private String riskLevel;
-
     private LocalDateTime evaluatedAt;
 
     @PrePersist
