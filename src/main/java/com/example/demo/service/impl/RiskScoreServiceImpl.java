@@ -24,22 +24,23 @@ public class RiskScoreServiceImpl implements RiskScoreService {
     }
 
     @Override
-    public RiskScore evaluateVisitor(Long visitorId) {
+public RiskScore evaluateVisitor(Long visitorId) {
 
-        Visitor visitor = visitorRepository.findById(visitorId)
-                .orElseThrow(() -> new RuntimeException("not found"));
+    Visitor visitor = visitorRepository.findById(visitorId)
+            .orElseThrow(() -> new IllegalArgumentException("Visitor not found"));
 
-        int score = 0;
+    int score = 0;
 
-        RiskScore riskScore = RiskScore.builder()
-                .visitor(visitor)
-                .totalScore(score)
-                .riskLevel(RiskLevelUtils.determineRiskLevel(score))
-                .evaluatedAt(LocalDateTime.now())
-                .build();
+    RiskScore riskScore = RiskScore.builder()
+            .visitor(visitor)
+            .totalScore(score)
+            .riskLevel(RiskLevelUtils.determineRiskLevel(score))
+            .evaluatedAt(LocalDateTime.now())
+            .build();
 
-        return repository.save(riskScore);
-    }
+    return repository.save(riskScore);
+}
+
 
     @Override
     public RiskScore getScoreForVisitor(Long visitorId) {
